@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decimal to Hex Converter – Number to Hexadecimal | BitConvert</title>
+  <meta name="description" content="BitConvert's free Decimal to Hex tool converts base-10 numbers to base-16 hexadecimal values instantly." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+      <div class="logo">BitConvert</div>
+      <div class="nav-links">
+        <a href="main.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - Decimal to Hexadecimal Converter</h1>
+    <p class="description">Convert Decimal numbers like <code>255</code> into Hexadecimal format like <code>FF</code>.</p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="decimalInput" placeholder="Enter Decimal Value..."></textarea>
+        <textarea id="hexOutput" placeholder="Hex Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertDecimalToHex()">Convert</button>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Decimal?</div>
+    <p><strong>Decimal</strong> is the base-10 number system that uses digits from <code>0</code> to <code>9</code>. It is the most commonly used system in daily life.</p>
+
+    <div class="section-title">What is Hexadecimal?</div>
+    <p><strong>Hexadecimal</strong> (base-16) uses digits from <code>0–9</code> and letters <code>A–F</code> (where A=10, B=11,..., F=15). It's often used in computer science to represent binary data compactly.</p>
+
+    <div class="section-title">How to Convert Decimal to Hexadecimal</div>
+    <ul>
+      <li><strong>Step 1:</strong> Divide the number by 16.</li>
+      <li><strong>Step 2:</strong> Record the remainder.</li>
+      <li><strong>Step 3:</strong> Continue dividing the quotient by 16 until it becomes 0.</li>
+      <li><strong>Step 4:</strong> Write the remainders in reverse order.</li>
+      <li><strong>Example:</strong> <code>255</code> → <code>FF</code></li>
+    </ul>
+
+    <div class="section-title">Decimal to Hex Table</div>
+    <table>
+      <thead>
+        <tr><th>Decimal</th><th>Hexadecimal</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td></tr>
+        <tr><td>2</td><td>2</td></tr>
+        <tr><td>3</td><td>3</td></tr>
+        <tr><td>4</td><td>4</td></tr>
+        <tr><td>5</td><td>5</td></tr>
+        <tr><td>6</td><td>6</td></tr>
+        <tr><td>7</td><td>7</td></tr>
+        <tr><td>8</td><td>8</td></tr>
+        <tr><td>9</td><td>9</td></tr>
+        <tr><td>10</td><td>A</td></tr>
+        <tr><td>11</td><td>B</td></tr>
+        <tr><td>12</td><td>C</td></tr>
+        <tr><td>13</td><td>D</td></tr>
+        <tr><td>14</td><td>E</td></tr>
+        <tr><td>15</td><td>F</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function convertDecimalToHex() {
+      const input = document.getElementById("decimalInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const hexOutput = document.getElementById("hexOutput");
+
+      if (input === "") {
+        outputText.textContent = "0";
+        hexOutput.value = "";
+        return;
+      }
+
+      if (!/^\d+$/.test(input)) {
+        outputText.textContent = "Invalid decimal number.";
+        hexOutput.value = "";
+        return;
+      }
+
+      const hex = parseInt(input, 10).toString(16).toUpperCase();
+      outputText.textContent = hex;
+      hexOutput.value = hex;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+
+      if (text === "" || text === "Invalid decimal number.") {
+        return;
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    document.getElementById("decimalInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        convertDecimalToHex();
+      }
+    });
+  </script>
+</body>
+</html>

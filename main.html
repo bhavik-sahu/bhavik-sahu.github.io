@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>BitConvert – Universal Converter Hub for Binary, Hex, ASCII, Decimal</title>
+  <meta name="description" content="BitConvert offers free online converters for Binary, Decimal, ASCII, Hex, and Octal systems. Convert between formats easily with our tools!" />
+  <meta name="keywords" content="binary converter, ascii to binary, text to binary, decimal to binary, hex to ascii, binary to decimal, number system converter, binary converter calculator, binary converter online, decimal to binary converter, bitconvert" />
+  <meta name="author" content="BitConvert Team" />
+  <meta name="publisher" content="BitConvert" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  
+  <link rel="stylesheet" href="style.css"> <!-- Link to your common stylesheet -->
+
+  <!-- Font Awesome for better icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    /* Your original styles will be loaded from style.css */
+
+    /* Enhanced Share Button Styles */
+    .share-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .share-btn {
+      background: linear-gradient(135deg, #00d0ff, #0099cc);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 208, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 208, 255, 0.4);
+      background: linear-gradient(135deg, #0099cc, #00d0ff);
+    }
+
+    .share-btn:active {
+      transform: translateY(0);
+    }
+
+    .share-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .share-btn:hover::before {
+      left: 100%;
+    }
+
+    .share-options {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background: white;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      width: 220px;
+      z-index: 1000;
+      overflow: hidden;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .share-options.show {
+      display: block;
+    }
+
+    .share-option {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      text-align: left;
+      color: #333;
+      background: none;
+      border: none;
+      width: 100%;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      gap: 12px;
+      font-weight: 500;
+    }
+
+    .share-option:hover {
+      background: #f8f9fa;
+      transform: translateX(5px);
+    }
+
+    .share-option i {
+      width: 20px;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .share-option.facebook:hover { background: #1877f2; color: white; }
+    .share-option.twitter:hover { background: #1da1f2; color: white; }
+    .share-option.whatsapp:hover { background: #25d366; color: white; }
+    .share-option.telegram:hover { background: #0088cc; color: white; }
+    .share-option.sms:hover { background: #34c759; color: white; }
+    .share-option.email:hover { background: #ea4335; color: white; }
+    .share-option.copy:hover { background: #6c757d; color: white; }
+
+    /* Success message for copy link */
+    .copy-success {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 1001;
+      animation: fadeInOut 3s ease;
+      display: none;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(-20px); }
+      20%, 80% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-20px); }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .nav-links {
+        gap: 1rem;
+      }
+      
+      .share-options {
+        right: -20px;
+        width: 200px;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Success message for copy link -->
+  <div class="copy-success" id="copySuccess">
+    <i class="fas fa-check-circle"></i> Link copied to clipboard!
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="logo">BitConvert</div>
+    <div class="nav-links">
+      <a href="main.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <div class="share-container">
+        <button class="share-btn" onclick="toggleShareOptions()">
+          <i class="fas fa-share-alt"></i>
+          Share
+        </button>
+        <div class="share-options" id="shareOptions">
+          <a href="#" class="share-option facebook" onclick="shareTo('facebook')">
+            <i class="fab fa-facebook-f"></i>
+            Facebook
+          </a>
+          <a href="#" class="share-option twitter" onclick="shareTo('twitter')">
+            <i class="fab fa-twitter"></i>
+            Twitter
+          </a>
+          <a href="#" class="share-option whatsapp" onclick="shareTo('whatsapp')">
+            <i class="fab fa-whatsapp"></i>
+            WhatsApp
+          </a>
+          <a href="#" class="share-option telegram" onclick="shareTo('telegram')">
+            <i class="fab fa-telegram-plane"></i>
+            Telegram
+          </a>
+          <a href="#" class="share-option sms" onclick="shareTo('sms')">
+            <i class="fas fa-sms"></i>
+            SMS
+          </a>
+          <a href="#" class="share-option email" onclick="shareTo('email')">
+            <i class="fas fa-envelope"></i>
+            Email
+          </a>
+          <button class="share-option copy" onclick="copyLink()">
+            <i class="fas fa-copy"></i>
+            Copy Link
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - Universal Converter Hub</h1>
+    <p class="description">
+      Welcome to BitConvert – your one-stop online binary converter. Our tools let you convert binary to decimal, text to binary, ASCII to binary, and even hex to ASCII. Whether you're looking for a binary converter calculator or want to explore conversion examples, BitConvert makes it easy and accurate.
+    </p>
+
+    <div class="category-section">
+      <div class="category">
+        <h3>Binary Converters</h3>
+        <ul>
+          <li><a href="binary_to_hex.html">Binary to Hex</a></li>
+          <li><a href="binary_to_decimal.html">Binary to Decimal</a></li>
+          <li><a href="binary_to_ascii.html">Binary to ASCII</a></li>
+          <li><a href="binary_to_octal.html">Binary to Octal</a></li>
+        </ul>
+      </div>
+
+      <div class="category">
+        <h3>Hexadecimal Converters</h3>
+        <ul>
+          <li><a href="hex_to_binary.html">Hex to Binary</a></li>
+          <li><a href="hex_to_decimal.html">Hex to Decimal</a></li>
+          <li><a href="hex_to_ascii.html">Hex to ASCII</a></li>
+        </ul>
+      </div>
+
+      <div class="category">
+        <h3>Decimal Converters</h3>
+        <ul>
+          <li><a href="decimal_to_binary.html">Decimal to Binary</a></li>
+          <li><a href="decimal_to_hex.html">Decimal to Hex</a></li>
+          <li><a href="decimal_to_octal.html">Decimal to Octal</a></li>
+        </ul>
+      </div>
+
+      <div class="category">
+        <h3>Octal Converters</h3>
+        <ul>
+          <li><a href="octal_to_decimal.html">Octal to Decimal</a></li>
+          <li><a href="octal_to_binary.html">Octal to Binary</a></li>
+        </ul>
+      </div>
+
+      <div class="category">
+        <h3>ASCII Text Converters</h3>
+        <ul>
+          <li><a href="ascii_to_binary.html">ASCII to Binary</a></li>
+          <li><a href="ascii_to_decimal.html">ASCII to Decimal</a></li>
+          <li><a href="ascii_to_hex.html">ASCII to Hex</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 BitConvert by <strong>Xzeon Technologies</strong>. All rights reserved. <br>
+    Contact: <a href="mailto:xzeontechnologies@gmail.com">xzeontechnologies@gmail.com</a>
+  </footer>
+
+  <script>
+    const pageUrl = encodeURIComponent(window.location.href);
+    const pageTitle = encodeURIComponent(document.title);
+
+    function toggleShareOptions() {
+      const options = document.getElementById('shareOptions');
+      options.classList.toggle('show');
+    }
+
+    function shareTo(platform) {
+      const currentUrl = window.location.href;
+      const title = document.title;
+      const text = `Check out ${title} - Amazing converter tools for Binary, Hex, ASCII, and more!`;
+      let shareUrl = '';
+
+      switch (platform) {
+        case 'facebook':
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+          break;
+        case 'twitter':
+          shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(text)}&hashtags=converter,binary,hex,ascii,programming`;
+          break;
+        case 'whatsapp':
+          shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + currentUrl)}`;
+          break;
+        case 'telegram':
+          shareUrl = `https://t.me/share/url?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(text)}`;
+          break;
+        case 'sms':
+          shareUrl = `sms:?body=${encodeURIComponent(text + ' ' + currentUrl)}`;
+          break;
+        case 'email':
+          const subject = encodeURIComponent('Check out BitConvert - Universal Converter Hub');
+          const body = encodeURIComponent(`Hi!\n\nI found this amazing converter tool:\n\n${title}\n${currentUrl}\n\nIt offers free online converters for Binary, Decimal, ASCII, Hex, and Octal systems. Very useful for programming and data conversion!\n\nBest regards`);
+          shareUrl = `mailto:?subject=${subject}&body=${body}`;
+          break;
+      }
+
+      if (shareUrl) {
+        try {
+          // Try native share API first for mobile devices
+          if (navigator.share && (platform === 'whatsapp' || platform === 'telegram') && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            navigator.share({
+              title: title,
+              text: text,
+              url: currentUrl
+            }).catch(() => {
+              // Fallback to web share if native share fails
+              openShareWindow(shareUrl);
+            });
+          } else {
+            openShareWindow(shareUrl);
+          }
+        } catch (error) {
+          console.error('Share failed:', error);
+          openShareWindow(shareUrl);
+        }
+      }
+
+      // Close the share options after sharing
+      document.getElementById('shareOptions').classList.remove('show');
+    }
+
+    function openShareWindow(url) {
+      // Check if it's a mobile device
+      const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // On mobile, open in the same tab for better app integration
+        window.open(url, '_blank');
+      } else {
+        // On desktop, open in a popup window
+        const popup = window.open(url, 'share', 'width=600,height=400,scrollbars=yes,resizable=yes');
+        
+        // Focus the popup window
+        if (popup) {
+          popup.focus();
+        }
+      }
+    }
+
+    function copyLink() {
+      const url = window.location.href;
+      
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          showCopySuccess();
+        }).catch(() => {
+          // Fallback for older browsers
+          fallbackCopyText(url);
+        });
+      } else {
+        // Fallback for older browsers
+        fallbackCopyText(url);
+      }
+
+      // Close the share options after copying
+      document.getElementById('shareOptions').classList.remove('show');
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopySuccess();
+        } else {
+          throw new Error('Copy command failed');
+        }
+      } catch (err) {
+        console.error('Unable to copy text: ', err);
+        // Show a prompt with the URL for manual copying
+        prompt('Copy this link:', text);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopySuccess() {
+      const successMsg = document.getElementById('copySuccess');
+      successMsg.style.display = 'block';
+      setTimeout(() => {
+        successMsg.style.display = 'none';
+      }, 3000);
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(e) {
+      const shareContainer = document.querySelector('.share-container');
+      if (!shareContainer.contains(e.target)) {
+        document.getElementById('shareOptions').classList.remove('show');
+      }
+    });
+
+    // Close dropdown on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.getElementById('shareOptions').classList.remove('show');
+      }
+    });
+
+    // Prevent share options from closing when clicking inside
+    document.getElementById('shareOptions').addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  </script>
+</body>
+</html>

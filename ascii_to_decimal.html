@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCII to Decimal Converter – Instant Online Tool | BitConvert</title>
+<meta name="description" content="Use BitConvert's free ASCII to Decimal converter to turn characters into decimal code easily. Try it now online!" />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+
+  <!-- Navigation bar -->
+  <nav>
+    <div class="logo">BitConvert</div>
+    <div class="nav-links">
+      <a href="main.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - ASCII to Decimal Converter</h1>
+    <p class="description">Convert ASCII characters like <code>A</code> or <code>Hello</code> into Decimal values instantly.</p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="asciiInput" placeholder="Enter ASCII text..."></textarea>
+        <textarea id="decimalOutput" placeholder="Decimal Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="asciiToDecimal()">Convert</button>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is ASCII?</div>
+    <p><strong>ASCII</strong> stands for American Standard Code for Information Interchange. It assigns a unique numeric code to characters like letters, numbers, punctuation, and control codes.</p>
+
+    <div class="section-title">What is Decimal?</div>
+    <p><strong>Decimal</strong> is the base-10 numbering system. In ASCII conversion, each character is represented by its decimal code from 0 to 127.</p>
+
+    <div class="section-title">How ASCII Converts to Decimal</div>
+    <ul>
+      <li><strong>Step 1:</strong> Take each character (e.g., <code>A</code>).</li>
+      <li><strong>Step 2:</strong> Find its corresponding ASCII decimal value (e.g., <code>A</code> → <code>65</code>).</li>
+      <li><strong>Step 3:</strong> Do this for every character in your input.</li>
+    </ul>
+
+    <div class="section-title">ASCII to Decimal Table (Common Characters)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Character</th>
+          <th>Decimal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>65</td></tr>
+        <tr><td>B</td><td>66</td></tr>
+        <tr><td>C</td><td>67</td></tr>
+        <tr><td>a</td><td>97</td></tr>
+        <tr><td>b</td><td>98</td></tr>
+        <tr><td>c</td><td>99</td></tr>
+        <tr><td>0</td><td>48</td></tr>
+        <tr><td>1</td><td>49</td></tr>
+        <tr><td>!</td><td>33</td></tr>
+        <tr><td>Space</td><td>32</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function asciiToDecimal() {
+      const input = document.getElementById("asciiInput").value;
+      const outputText = document.getElementById("outputText");
+      const decimalOutput = document.getElementById("decimalOutput");
+
+      if (!input) {
+        outputText.textContent = "Enter ASCII text.";
+        decimalOutput.value = "";
+        return;
+      }
+
+      const decimalValues = input.split('').map(ch => ch.charCodeAt(0)).join(' ');
+      outputText.textContent = decimalValues;
+      decimalOutput.value = decimalValues;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      // Check if the text is valid for copying
+      if (text === "" || text === "Enter ASCII text." || text === "0") {
+        return;
+      }
+      
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    // Allow Enter key to trigger conversion
+    document.getElementById("asciiInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        asciiToDecimal();
+      }
+    });
+  </script>
+</body>
+</html>

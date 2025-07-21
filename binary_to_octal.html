@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary to Octal Converter – Free Online Converter | BitConvert</title>
+<meta name="description" content="Convert binary numbers to octal instantly with BitConvert's fast and free Binary to Octal tool." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+      <a href="main.html" class="logo">BitConvert</a>
+      <div class="nav-links">
+        <a href="main.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - Binary to Octal Converter</h1>
+    <p class="description">
+      Easily convert binary numbers like <code>110101</code> into octal form. Great for learning and digital electronics!
+    </p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="binaryInput" placeholder="Enter Binary Value..."></textarea>
+        <textarea id="octalOutput" placeholder="Octal Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertBinaryToOctal()">Convert</button>
+      <p style="text-align: center;">Need reverse? <a href="octal_to_binary.html">Try Octal to Binary Converter</a></p>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Binary?</div>
+    <p>The <strong>binary system</strong> uses only 0s and 1s. It's the core language of computers and digital circuits.</p>
+
+    <div class="section-title">What is Octal?</div>
+    <p>The <strong>octal system</strong> (base-8) uses digits from 0 to 7. It's used in computing as a compact representation of binary data.</p>
+
+    <div class="section-title">How to Convert Binary to Octal</div>
+    <ul>
+      <li><strong>Step 1:</strong> Group the binary digits in sets of 3 from right to left.</li>
+      <li><strong>Step 2:</strong> Convert each group to its octal equivalent.</li>
+      <li><strong>Example:</strong> <code>101101</code> → <code>000 101 101</code> → <code>2 5</code> → <code>55</code></li>
+    </ul>
+  </div>
+
+  <script>
+    function convertBinaryToOctal() {
+      const binaryInput = document.getElementById("binaryInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const octalOutput = document.getElementById("octalOutput");
+
+      const cleanBinary = binaryInput.replace(/\s+/g, '');
+
+      if (!/^[01]+$/.test(cleanBinary)) {
+        outputText.textContent = 'Invalid binary number.';
+        octalOutput.value = "";
+        return;
+      }
+
+      const decimal = parseInt(cleanBinary, 2);
+      const octal = decimal.toString(8);
+
+      outputText.textContent = octal;
+      octalOutput.value = octal;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      if (text === "" || text === "Invalid binary number." || text === "0") {
+        return;
+      }
+
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

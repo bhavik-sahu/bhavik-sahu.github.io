@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hex to ASCII Converter – Decode Hexadecimal Text | BitConvert</title>
+<meta name="description" content="Convert hex code to ASCII text easily using BitConvert's online Hex to ASCII converter. Try now!" />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body> <nav>
+    <div class="logo">BitConvert</div>
+    <div class="nav-links">
+      <a href="main.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>BitConvert - Hex to ASCII Converter</h1>
+    <p class="description">
+      Convert hexadecimal strings like <code>41</code>, <code>48656C6C6F</code> into ASCII characters like <code>A</code> or <code>Hello</code> instantly.
+    </p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="hexInput" placeholder="Enter Hex Value..."></textarea>
+        <textarea id="asciiOutput" placeholder="ASCII Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertHexToAscii()">Convert</button>
+      <p style="text-align: center;">Need reverse? <a href="ascii_to_hex.html">Try ASCII to Hex Converter</a></p>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">Output will appear here</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is ASCII?</div>
+    <p><strong>ASCII</strong> (American Standard Code for Information Interchange) is a character encoding standard that represents text in computers. Each character (like A, B, 1, !) is assigned a unique numeric code from 0 to 127.</p>
+
+    <div class="section-title">What is Hexadecimal?</div>
+    <p><strong>Hexadecimal (base-16)</strong> is a numbering system that uses 16 digits: 0–9 and A–F. Each pair of hex digits represents one byte (8 bits), which often corresponds to one ASCII character.</p>
+
+    <div class="section-title">How Hex to ASCII Conversion Works</div>
+    <ul>
+      <li><strong>Step 1:</strong> Split the hex string into pairs (e.g., <code>48656C6C6F</code> → <code>48 65 6C 6C 6F</code>).</li>
+      <li><strong>Step 2:</strong> Convert each pair to decimal (e.g., <code>48</code> → <code>72</code>).</li>
+      <li><strong>Step 3:</strong> Find the ASCII character for each decimal (e.g., <code>72</code> → <code>H</code>).</li>
+    </ul>
+
+    <div class="section-title">Hex to ASCII Table (Common Values)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Hex</th>
+          <th>Decimal</th>
+          <th>ASCII</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>41</td><td>65</td><td>A</td><td>Uppercase A</td></tr>
+        <tr><td>61</td><td>97</td><td>a</td><td>Lowercase a</td></tr>
+        <tr><td>30</td><td>48</td><td>0</td><td>Digit Zero</td></tr>
+        <tr><td>20</td><td>32</td><td>(space)</td><td>Space character</td></tr>
+        <tr><td>21</td><td>33</td><td>!</td><td>Exclamation mark</td></tr>
+        <tr><td>3F</td><td>63</td><td>?</td><td>Question mark</td></tr>
+        <tr><td>0A</td><td>10</td><td>↵</td><td>Newline (LF)</td></tr>
+        <tr><td>1A</td><td>26</td><td>␚</td><td>Substitute (non-printable)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function convertHexToAscii() {
+      const hex = document.getElementById("hexInput").value.trim().replace(/\s+/g, '');
+      const outputText = document.getElementById("outputText");
+      const asciiOutput = document.getElementById("asciiOutput");
+
+      if (!/^[0-9a-fA-F]*$/.test(hex) || hex.length % 2 !== 0) {
+        outputText.textContent = "Invalid hexadecimal input.";
+        asciiOutput.value = "";
+        return;
+      }
+
+      let ascii = "";
+      let displayAscii = "";
+
+      for (let i = 0; i < hex.length; i += 2) {
+        const byte = hex.substr(i, 2);
+        const charCode = parseInt(byte, 16);
+
+        ascii += String.fromCharCode(charCode);
+
+        if (charCode >= 32 && charCode <= 126) {
+          displayAscii += String.fromCharCode(charCode);
+        } else {
+          displayAscii += '␚'; // Placeholder for non-printable
+        }
+      }
+
+      outputText.textContent = displayAscii || "Empty or Non-Printable Characters";
+      asciiOutput.value = ascii;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      // Check if the text is valid for copying
+      if (text === "" || text === "Invalid hexadecimal input." || text === "Output will appear here") {
+        return;
+      }
+      
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    // Allow Enter key to trigger conversion
+    document.getElementById("hexInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        convertHexToAscii();
+      }
+    });
+  </script>
+</body>
+</html>

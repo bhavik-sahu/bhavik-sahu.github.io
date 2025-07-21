@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Octal to Binary Converter – Base-8 to Base-2 Tool | BitConvert</title>
+<meta name="description" content="Convert octal numbers to binary code quickly and accurately with BitConvert's Octal to Binary tool." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body> <nav>
+    <div class="logo">BitConvert</div>
+    <div class="nav-links">
+      <a href="main.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>BitConvert - Octal to Binary Converter</h1>
+    <p class="description">Convert Octal numbers (like <code>77</code>) to Binary (base-2) representation.</p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="octalInput" placeholder="Enter Octal Value..."></textarea>
+        <textarea id="binaryOutput" placeholder="Binary Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertOctalToBinary()">Convert</button>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Octal?</div>
+    <p>The <strong>Octal number system</strong> is base-8 and uses digits from 0 to 7. It's often used in Unix file permissions, digital systems, and low-level programming.</p>
+
+    <div class="section-title">What is Binary?</div>
+    <p><strong>Binary</strong> is the base-2 number system using only <code>0</code> and <code>1</code>. It's the foundation of all digital electronics and computer architecture.</p>
+
+    <div class="section-title">How to Convert Octal to Binary</div>
+    <ul>
+      <li><strong>Step 1:</strong> Take each digit in the octal number separately.</li>
+      <li><strong>Step 2:</strong> Convert it into a 3-bit binary number.</li>
+      <li><strong>Example:</strong> <code>7</code> → <code>111</code>, <code>5</code> → <code>101</code>, so <code>75</code> → <code>111101</code></li>
+    </ul>
+
+    <div class="section-title">Octal to Binary Table</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Octal Digit</th>
+          <th>Binary Equivalent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>000</td></tr>
+        <tr><td>1</td><td>001</td></tr>
+        <tr><td>2</td><td>010</td></tr>
+        <tr><td>3</td><td>011</td></tr>
+        <tr><td>4</td><td>100</td></tr>
+        <tr><td>5</td><td>101</td></tr>
+        <tr><td>6</td><td>110</td></tr>
+        <tr><td>7</td><td>111</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function convertOctalToBinary() {
+      const input = document.getElementById("octalInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const binaryOutput = document.getElementById("binaryOutput");
+
+      if (input === "") {
+        outputText.textContent = "0";
+        binaryOutput.value = "";
+        return;
+      }
+
+      if (!/^[0-7]+$/.test(input)) {
+        outputText.textContent = "Invalid octal number.";
+        binaryOutput.value = "";
+        return;
+      }
+
+      const binary = input
+        .split('')
+        .map(d => parseInt(d, 8).toString(2).padStart(3, '0'))
+        .join('');
+      
+      outputText.textContent = binary;
+      binaryOutput.value = binary;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      // Check if the text is valid for copying
+      if (text === "" || text === "Invalid octal number.") {
+        return;
+      }
+      
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    // Allow Enter key to trigger conversion
+    document.getElementById("octalInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        convertOctalToBinary();
+      }
+    });
+  </script>
+</body>
+</html>

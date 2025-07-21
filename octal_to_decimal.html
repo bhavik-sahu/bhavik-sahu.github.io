@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Octal to Decimal Converter – Free Base Converter | BitConvert</title>
+<meta name="description" content="Use our Octal to Decimal converter to transform base-8 numbers to base-10 instantly online." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+  
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="logo">BitConvert</div>
+    <div class="nav-links">
+      <a href="main.html">Home</a>
+      <a href="privacy.html">Privacy policy</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - Octal to Decimal Converter</h1>
+    <p class="description">Convert Octal numbers (base-8) like <code>17</code> into Decimal format easily and instantly.</p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="octalInput" placeholder="Enter Octal Value..."></textarea>
+        <textarea id="decimalOutput" placeholder="Decimal Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertOctalToDecimal()">Convert</button>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Octal?</div>
+    <p><strong>Octal</strong> is a base-8 number system using digits from <code>0</code> to <code>7</code>. It's commonly used in digital electronics and computing for its compact representation of binary data.</p>
+
+    <div class="section-title">What is Decimal?</div>
+    <p><strong>Decimal</strong> is the standard base-10 number system used in everyday arithmetic, using digits from <code>0</code> to <code>9</code>.</p>
+
+    <div class="section-title">How to Convert Octal to Decimal</div>
+    <ul>
+      <li><strong>Step 1:</strong> Start from the rightmost digit and assign powers of 8 (i.e., 8⁰, 8¹, 8², ...).</li>
+      <li><strong>Step 2:</strong> Multiply each digit by 8<sup>position</sup> and sum them.</li>
+      <li><strong>Example:</strong> <code>17</code> = (1 × 8<sup>1</sup>) + (7 × 8<sup>0</sup>) = <code>15</code></li>
+    </ul>
+
+    <div class="section-title">Octal to Decimal Table</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Octal Digit</th>
+          <th>Decimal Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td></tr>
+        <tr><td>2</td><td>2</td></tr>
+        <tr><td>3</td><td>3</td></tr>
+        <tr><td>4</td><td>4</td></tr>
+        <tr><td>5</td><td>5</td></tr>
+        <tr><td>6</td><td>6</td></tr>
+        <tr><td>7</td><td>7</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function convertOctalToDecimal() {
+      const input = document.getElementById("octalInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const decimalOutput = document.getElementById("decimalOutput");
+
+      if (input === "") {
+        outputText.textContent = "0";
+        decimalOutput.value = "";
+        return;
+      }
+
+      if (!/^[0-7]+$/.test(input)) {
+        outputText.textContent = "Invalid octal number.";
+        decimalOutput.value = "";
+        return;
+      }
+
+      const decimal = parseInt(input, 8);
+      outputText.textContent = decimal;
+      decimalOutput.value = decimal;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      // Check if the text is valid for copying
+      if (text === "" || text === "Invalid octal number.") {
+        return;
+      }
+      
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    // Allow Enter key to trigger conversion
+    document.getElementById("octalInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        convertOctalToDecimal();
+      }
+    });
+  </script>
+</body>
+</html>

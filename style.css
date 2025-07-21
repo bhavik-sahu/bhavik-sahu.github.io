@@ -1,0 +1,305 @@
+/* General Body Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(120deg, #10101a, #1b1b2f);
+  color: #ccc;
+  background-color: #161625;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures footer sticks to bottom */
+}
+
+/* Navigation Bar */
+nav {
+  background-color: #161625;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+nav .logo {
+  font-size: 20px;
+  color: #00d0ff;
+  font-weight: bold;
+}
+
+nav a {
+  color: #00d0ff; /* Adjusted to match h1 and other primary links */
+  text-decoration: none;
+  font-size: 16px;
+  margin-left: 20px;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Main Container */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  flex: 1; /* Allows the container to grow and push footer down */
+}
+
+/* Headings and Descriptions */
+h1 {
+  font-size: 36px;
+  color: #00d0ff;
+  text-align: center;
+}
+
+.description {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #ccc;
+  font-size: 18px;
+}
+
+/* Converter Box */
+.converter-box {
+  background-color: #1f1f2e;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+/* Input/Output Textareas Group */
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.input-group textarea {
+  width: 48%; /* For two columns */
+  height: 100px;
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  resize: none;
+  background: #2b2b3d;
+  color: #e0e0e0;
+}
+
+/* Responsive adjustment for textareas */
+@media (max-width: 768px) {
+  .input-group textarea {
+    width: 100%; /* Stack on small screens */
+    margin-bottom: 15px;
+  }
+}
+
+/* Convert Button */
+.btn {
+  display: block;
+  width: 220px;
+  margin: 0 auto 20px auto;
+  background-color: #00d0ff;
+  color: #000;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background-color: #00b8e6;
+}
+
+/* Output Area */
+.output-area {
+  background-color: #191928;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #00ffcc;
+  border-radius: 6px;
+  border: 1px solid #333;
+  position: relative;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.output-text {
+  flex: 1;
+  text-align: center;
+  padding-right: 40px; /* Space for copy button */
+}
+
+/* Copy Icon Button */
+.copy-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #00d0ff;
+  font-size: 18px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.copy-icon:hover {
+  background-color: rgba(0, 208, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.copy-icon:active {
+  transform: scale(0.95);
+}
+
+/* Copied Feedback Message */
+.copied-feedback {
+  position: absolute;
+  top: -30px;
+  right: 10px;
+  background: #00d0ff;
+  color: #000;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.copied-feedback.show {
+  opacity: 1;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 24px;
+  margin-top: 40px;
+  color: #00d0ff;
+}
+
+/* Links (general) */
+a {
+  color: #00d0ff; /* Primary link color */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #2b2b3d;
+}
+
+table th, table td {
+  border: 1px solid #444;
+  padding: 10px;
+  text-align: center;
+}
+
+table th {
+  background-color: #00d0ff;
+  color: #000;
+}
+
+/* Code Snippets */
+code {
+  background-color: #333;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #00ffcc;
+}
+
+/* Specific styles for main.html categories */
+.category-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.category {
+  background-color: #1f1f2e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 48%; /* Two columns */
+}
+
+@media (max-width: 768px) {
+  .category {
+    width: 100%; /* Stack on small screens */
+  }
+}
+
+.category h3 {
+  color: #00d0ff;
+  margin-bottom: 10px;
+}
+
+.category ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.category li {
+  margin: 8px 0;
+}
+
+.category a {
+  color: #00ffcc; /* Specific link color for category items */
+  text-decoration: none;
+}
+
+.category a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  background-color: #161625;
+  padding: 20px;
+  text-align: center;
+  color: #aaa;
+  font-size: 14px;
+  margin-top: auto; /* Pushes footer to the bottom */
+}
+
+footer a {
+  color: #00d0ff;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Ensure images are responsive */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block; /* Removes extra space below image */
+}

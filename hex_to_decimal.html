@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hex to Decimal Converter – Free Number Converter | BitConvert</title>
+<meta name="description" content="Turn hexadecimal numbers into decimal values instantly with BitConvert's Hex to Decimal online converter." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body> <nav>
+    <div class="logo">BitConvert</div>
+    <div class="nav-links">
+      <a href="main.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>BitConvert - Hex to Decimal Converter</h1>
+    <p class="description">
+      Quickly convert hexadecimal values like <code>1A</code>, <code>7F</code>, or <code>FF</code> to decimal numbers.
+      Useful for computer science, networking, and digital logic!
+    </p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="hexInput" placeholder="Enter Hex Value..."></textarea>
+        <textarea id="decimalOutput" placeholder="Decimal Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertHexToDecimal()">Convert</button>
+      <p style="text-align: center;">Need reverse? <a href="decimal_to_hex.html">Try Decimal to Hex Converter</a></p>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Hexadecimal?</div>
+    <p>The <strong>hexadecimal system</strong> (base-16) uses 0–9 and A–F to represent values. It's commonly used in memory addresses and color codes.</p>
+
+    <div class="section-title">What is Decimal?</div>
+    <p>The <strong>decimal system</strong> (base-10) is our standard numbering system using digits from 0 to 9.</p>
+
+    <div class="section-title">How to Convert Hex to Decimal</div>
+    <ul>
+      <li><strong>Step 1:</strong> Start from the rightmost digit and assign powers of 16.</li>
+      <li><strong>Step 2:</strong> Multiply each hex digit by 16^position.</li>
+      <li><strong>Example:</strong> <code>1A</code> → (1 × 16<sup>1</sup>) + (10 × 16<sup>0</sup>) = <code>26</code></li>
+    </ul>
+  </div>
+
+  <script>
+    function convertHexToDecimal() {
+      const hexInput = document.getElementById("hexInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const decimalOutput = document.getElementById("decimalOutput");
+
+      if (hexInput === "") {
+        outputText.textContent = "0";
+        decimalOutput.value = "";
+        return;
+      }
+
+      const cleanHex = hexInput.replace(/\s+/g, '');
+
+      if (!/^[0-9a-fA-F]+$/.test(cleanHex)) {
+        outputText.textContent = "Invalid hexadecimal number.";
+        decimalOutput.value = "";
+        return;
+      }
+
+      const decimal = parseInt(cleanHex, 16);
+      outputText.textContent = decimal;
+      decimalOutput.value = decimal;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      // Check if the text is valid for copying
+      if (text === "" || text === "Invalid hexadecimal number.") {
+        return;
+      }
+      
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    // Allow Enter key to trigger conversion
+    document.getElementById("hexInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        convertHexToDecimal();
+      }
+    });
+  </script>
+</body>
+</html>

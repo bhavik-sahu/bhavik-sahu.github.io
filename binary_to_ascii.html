@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary to ASCII Converter – Decode Binary Text | BitConvert</title>
+  <meta name="description" content="Convert binary code to ASCII characters with this simple and accurate online Binary to ASCII converter." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+      <div class="logo">BitConvert</div>
+      <div class="nav-links">
+        <a href="main.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - Binary to ASCII Converter</h1>
+    <p class="description">
+      Convert binary strings like <code>01001000 01101001</code> into readable ASCII text like <strong>Hi</strong>. Useful for decoding messages or understanding binary data.
+    </p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="binaryInput" placeholder="Enter Binary (e.g. 01001000 01101001)..."></textarea>
+        <textarea id="asciiOutput" placeholder="ASCII Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertBinaryToASCII()">Convert</button>
+      <p style="text-align: center;">Need reverse? <a href="ascii_to_binary.html">Try ASCII to Binary Converter</a></p>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is ASCII?</div>
+    <p><strong>ASCII</strong> stands for the American Standard Code for Information Interchange. It maps characters to numeric binary codes (like <code>H = 01001000</code>).</p>
+
+    <div class="section-title">How to Convert Binary to ASCII</div>
+    <ul>
+      <li><strong>Step 1:</strong> Split the binary string into 8-bit chunks.</li>
+      <li><strong>Step 2:</strong> Convert each chunk to decimal.</li>
+      <li><strong>Step 3:</strong> Find the corresponding ASCII character for each decimal.</li>
+      <li><strong>Example:</strong> <code>01001000 01101001</code> → <code>H</code> and <code>i</code> = <strong>Hi</strong></li>
+    </ul>
+  </div>
+
+  <script>
+    function convertBinaryToASCII() {
+      const input = document.getElementById("binaryInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const asciiOutput = document.getElementById("asciiOutput");
+
+      if (!input) {
+        outputText.textContent = "Enter binary code.";
+        asciiOutput.value = "";
+        return;
+      }
+
+      const binaryArray = input.split(" ").filter(b => /^[01]{8}$/.test(b));
+      if (binaryArray.length === 0) {
+        outputText.textContent = "Invalid input. Use space-separated 8-bit binary strings.";
+        asciiOutput.value = "";
+        return;
+      }
+
+      try {
+        const ascii = binaryArray.map(bin => String.fromCharCode(parseInt(bin, 2))).join("");
+        outputText.textContent = ascii;
+        asciiOutput.value = ascii;
+      } catch (e) {
+        outputText.textContent = "Conversion failed.";
+        asciiOutput.value = "";
+      }
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+
+      if (text === "" || text === "Enter binary code." || text === "Invalid input. Use space-separated 8-bit binary strings." || text === "Conversion failed." || text === "0") {
+        return;
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    document.getElementById("binaryInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        convertBinaryToASCII();
+      }
+    });
+  </script>
+</body>
+</html>

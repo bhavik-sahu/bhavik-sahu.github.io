@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary to Decimal Converter – Fast Online Calculator | BitConvert</title>
+  <meta name="description" content="Free Binary to Decimal converter to quickly convert binary numbers to decimal. Accurate, instant & easy to use!" />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+
+  <!-- === NAVBAR === -->
+  <nav class="navbar">
+      <div class="logo">BitConvert</div>
+      <div class="nav-links">
+        <a href="main.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - Binary to Decimal Converter</h1>
+    <p class="description">
+      Easily convert binary numbers (like <code>1101</code>) into decimal form. Quick, accurate, and perfect for students & developers!
+    </p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="binaryInput" placeholder="Enter Binary Value..."></textarea>
+        <textarea id="decimalOutput" placeholder="Decimal Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertBinaryToDecimal()">Convert</button>
+      <p style="text-align: center;">Need reverse? <a href="decimal_to_binary.html">Try Decimal to Binary Converter</a></p>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Binary?</div>
+    <p>The <strong>binary system</strong> uses only 0s and 1s. It's the core language of computers and digital systems.</p>
+
+    <div class="section-title">What is Decimal?</div>
+    <p>The <strong>decimal system</strong> (base-10) is the number system we use every day, made up of digits from 0 to 9.</p>
+
+    <div class="section-title">How to Convert Binary to Decimal</div>
+    <ul>
+      <li><strong>Step 1:</strong> Start from the rightmost bit and assign powers of 2.</li>
+      <li><strong>Step 2:</strong> Multiply each bit by 2<sup>position</sup> and add.</li>
+      <li><strong>Example:</strong> <code>1101</code> → <code>1×8 + 1×4 + 0×2 + 1×1 = 13</code></li>
+    </ul>
+  </div>
+
+  <script>
+    function convertBinaryToDecimal() {
+      const binary = document.getElementById("binaryInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const decimalOutput = document.getElementById("decimalOutput");
+
+      if (!/^[01]+$/.test(binary)) {
+        outputText.textContent = 'Invalid binary number.';
+        decimalOutput.value = "";
+        return;
+      }
+
+      const decimal = parseInt(binary, 2);
+      outputText.textContent = decimal;
+      decimalOutput.value = decimal;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+
+      if (text === "" || text === "Invalid binary number." || text === "0") {
+        return;
+      }
+
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

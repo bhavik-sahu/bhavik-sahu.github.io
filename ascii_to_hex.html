@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCII to Hex Converter – Free Character to Hex | BitConvert</title>
+  <meta name="description" content="Easily convert ASCII characters to hexadecimal with BitConvert's free ASCII to Hex tool. Try it instantly online!" />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+      <div class="logo">BitConvert</div>
+      <div class="nav-links">
+        <a href="main.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h1>BitConvert - ASCII to Hexadecimal Converter</h1>
+    <p class="description">Convert ASCII characters like <code>ABC</code> into their hexadecimal form quickly and easily.</p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="asciiInput" placeholder="Enter ASCII text..."></textarea>
+        <textarea id="hexOutput" placeholder="Hexadecimal Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="asciiToHex()">Convert</button>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is ASCII?</div>
+    <p><strong>ASCII</strong> stands for American Standard Code for Information Interchange. It assigns numeric values to characters like A–Z, a–z, 0–9, and symbols.</p>
+
+    <div class="section-title">What is Hexadecimal?</div>
+    <p><strong>Hexadecimal</strong> is a base-16 system using digits 0–9 and letters A–F. It's often used to represent binary data more compactly.</p>
+
+    <div class="section-title">How to Convert ASCII to Hex</div>
+    <ul>
+      <li><strong>Step 1:</strong> Take each character from the ASCII input.</li>
+      <li><strong>Step 2:</strong> Find its ASCII decimal value using a table.</li>
+      <li><strong>Step 3:</strong> Convert that decimal to hexadecimal (base-16).</li>
+      <li><strong>Example:</strong> <code>A</code> → 65 (decimal) → <code>41</code> (hex)</li>
+    </ul>
+
+    <div class="section-title">ASCII to Hex Table (Common Characters)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Character</th>
+          <th>Decimal</th>
+          <th>Hex</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>65</td><td>41</td></tr>
+        <tr><td>B</td><td>66</td><td>42</td></tr>
+        <tr><td>C</td><td>67</td><td>43</td></tr>
+        <tr><td>a</td><td>97</td><td>61</td></tr>
+        <tr><td>b</td><td>98</td><td>62</td></tr>
+        <tr><td>c</td><td>99</td><td>63</td></tr>
+        <tr><td>0</td><td>48</td><td>30</td></tr>
+        <tr><td>1</td><td>49</td><td>31</td></tr>
+        <tr><td>!</td><td>33</td><td>21</td></tr>
+        <tr><td>Space</td><td>32</td><td>20</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function asciiToHex() {
+      const input = document.getElementById("asciiInput").value;
+      const outputText = document.getElementById("outputText");
+      const hexOutput = document.getElementById("hexOutput");
+
+      if (!input) {
+        outputText.textContent = "Enter ASCII text.";
+        hexOutput.value = "";
+        return;
+      }
+
+      const hexValues = input.split('').map(ch => ch.charCodeAt(0).toString(16).toUpperCase()).join(' ');
+      outputText.textContent = hexValues;
+      hexOutput.value = hexValues;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+
+      if (text === "" || text === "Enter ASCII text." || text === "0") return;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) showCopiedFeedback();
+        else console.error('Fallback: Unable to copy');
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    document.getElementById("asciiInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        asciiToHex();
+      }
+    });
+  </script>
+</body>
+</html>

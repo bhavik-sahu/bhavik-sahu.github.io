@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCII to Binary Converter – Free Online Tool | BitConvert</title>
+  <meta name="description" content="Convert ASCII text to binary code with our free online ASCII to Binary converter. Fast, accurate, and easy to use at BitConvert." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+
+  <!-- Navigation bar -->
+  <nav>
+    <div class="logo">BitConvert</div>
+    <div class="nav-links">
+      <a href="main.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - ASCII to Binary Converter</h1>
+    <p class="description">Convert ASCII text like <code>Hello</code> into binary format. Ideal for encoding, learning, and debugging.</p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="asciiInput" placeholder="Enter ASCII Text..."></textarea>
+        <textarea id="binaryOutput" placeholder="Binary Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertAsciiToBinary()">Convert</button>
+      <p style="text-align: center;">Need reverse? <a href="binary_to_ascii.html">Try Binary to ASCII Converter</a></p>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is ASCII?</div>
+    <p><strong>ASCII</strong> (American Standard Code for Information Interchange) is a character encoding standard. Each letter, number, or symbol is assigned a numeric value from 0 to 127.</p>
+
+    <div class="section-title">What is Binary?</div>
+    <p><strong>Binary</strong> is a base-2 numbering system using only <code>0</code> and <code>1</code>. Computers process data in binary, and each ASCII character is stored using its 8-bit binary representation.</p>
+
+    <div class="section-title">How ASCII Converts to Binary</div>
+    <ul>
+      <li><strong>Step 1:</strong> Take each character and find its ASCII value.</li>
+      <li><strong>Step 2:</strong> Convert that ASCII value to binary (8-bit format).</li>
+      <li><strong>Example:</strong> <code>A</code> → ASCII: 65 → Binary: <code>01000001</code></li>
+    </ul>
+
+    <div class="section-title">ASCII to Binary Table (Common Examples)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Character</th>
+          <th>ASCII Decimal</th>
+          <th>Binary (8-bit)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>65</td><td>01000001</td></tr>
+        <tr><td>B</td><td>66</td><td>01000010</td></tr>
+        <tr><td>C</td><td>67</td><td>01000011</td></tr>
+        <tr><td>a</td><td>97</td><td>01100001</td></tr>
+        <tr><td>b</td><td>98</td><td>01100010</td></tr>
+        <tr><td>c</td><td>99</td><td>01100011</td></tr>
+        <tr><td>0</td><td>48</td><td>00110000</td></tr>
+        <tr><td>1</td><td>49</td><td>00110001</td></tr>
+        <tr><td>!</td><td>33</td><td>00100001</td></tr>
+        <tr><td>Space</td><td>32</td><td>00100000</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function convertAsciiToBinary() {
+      const input = document.getElementById("asciiInput").value;
+      const outputText = document.getElementById("outputText");
+      const binaryOutput = document.getElementById("binaryOutput");
+
+      if (!input) {
+        outputText.textContent = "Input is empty.";
+        binaryOutput.value = "";
+        return;
+      }
+
+      const binary = input.split('').map(char =>
+        char.charCodeAt(0).toString(2).padStart(8, '0')
+      ).join(' ');
+
+      outputText.textContent = binary;
+      binaryOutput.value = binary;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      // Check if the text is valid for copying
+      if (text === "" || text === "Input is empty." || text === "0") {
+        return;
+      }
+      
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    // Allow Enter key to trigger conversion
+    document.getElementById("asciiInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        convertAsciiToBinary();
+      }
+    });
+  </script>
+</body>
+</html>

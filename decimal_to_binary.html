@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decimal to Binary Converter – Convert Numbers Easily | BitConvert</title>
+  <meta name="description" content="Convert decimal numbers to binary code with our easy-to-use online Decimal to Binary converter tool." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+
+  <!-- ✅ Navbar -->
+  <nav class="navbar">
+      <div class="logo">BitConvert</div>
+      <div class="nav-links">
+        <a href="main.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - Decimal to Binary Converter</h1>
+    <p class="description">Convert Decimal numbers like <code>255</code> into Binary format quickly and easily.</p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="decimalInput" placeholder="Enter Decimal Value..."></textarea>
+        <textarea id="binaryOutput" placeholder="Binary Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertDecimalToBinary()">Convert</button>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Decimal?</div>
+    <p><strong>Decimal</strong> is the standard base-10 number system used in everyday counting and mathematics. It uses digits from <code>0</code> to <code>9</code>.</p>
+
+    <div class="section-title">What is Binary?</div>
+    <p><strong>Binary</strong> is a base-2 number system that uses only <code>0</code> and <code>1</code>. It's used in digital electronics and computing.</p>
+
+    <div class="section-title">How to Convert Decimal to Binary</div>
+    <ul>
+      <li><strong>Step 1:</strong> Divide the number by 2.</li>
+      <li><strong>Step 2:</strong> Write down the remainder.</li>
+      <li><strong>Step 3:</strong> Repeat the process with the quotient until it becomes 0.</li>
+      <li><strong>Step 4:</strong> Reverse the remainders to get the binary result.</li>
+      <li><strong>Example:</strong> <code>10</code> → <code>1010</code></li>
+    </ul>
+
+    <div class="section-title">Decimal to Binary Table</div>
+    <table>
+      <thead>
+        <tr><th>Decimal</th><th>Binary</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>0000</td></tr>
+        <tr><td>1</td><td>0001</td></tr>
+        <tr><td>2</td><td>0010</td></tr>
+        <tr><td>3</td><td>0011</td></tr>
+        <tr><td>4</td><td>0100</td></tr>
+        <tr><td>5</td><td>0101</td></tr>
+        <tr><td>6</td><td>0110</td></tr>
+        <tr><td>7</td><td>0111</td></tr>
+        <tr><td>8</td><td>1000</td></tr>
+        <tr><td>9</td><td>1001</td></tr>
+        <tr><td>10</td><td>1010</td></tr>
+        <tr><td>11</td><td>1011</td></tr>
+        <tr><td>12</td><td>1100</td></tr>
+        <tr><td>13</td><td>1101</td></tr>
+        <tr><td>14</td><td>1110</td></tr>
+        <tr><td>15</td><td>1111</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function convertDecimalToBinary() {
+      const input = document.getElementById("decimalInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const binaryOutput = document.getElementById("binaryOutput");
+
+      if (input === "") {
+        outputText.textContent = "0";
+        binaryOutput.value = "";
+        return;
+      }
+
+      if (!/^\d+$/.test(input)) {
+        outputText.textContent = "Invalid decimal number.";
+        binaryOutput.value = "";
+        return;
+      }
+
+      const binary = parseInt(input, 10).toString(2);
+      outputText.textContent = binary;
+      binaryOutput.value = binary;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      if (text === "" || text === "Invalid decimal number.") return;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) showCopiedFeedback();
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => feedback.classList.remove("show"), 1500);
+    }
+
+    document.getElementById("decimalInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        convertDecimalToBinary();
+      }
+    });
+  </script>
+
+</body>
+</html>

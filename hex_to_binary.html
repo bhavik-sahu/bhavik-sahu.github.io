@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hex to Binary Converter – Convert Hexadecimal to Binary | BitConvert</title>
+<meta name="description" content="Easily convert hex values to binary format with our free online Hex to Binary converter tool." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body> <nav>
+    <div class="logo">BitConvert</div>
+    <div class="nav-links">
+      <a href="main.html">Home</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>BitConvert - Hex to Binary Converter</h1>
+    <p class="description">
+      Instantly convert hexadecimal values like <code>1F</code>, <code>2A</code>, or <code>FF</code> to binary format.
+      Perfect for programmers, students, and digital electronics learners!
+    </p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="hexInput" placeholder="Enter Hex Value..."></textarea>
+        <textarea id="binaryOutput" placeholder="Binary Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertHexToBinary()">Convert</button>
+      <p style="text-align: center;">Need reverse? <a href="binary_to_hex.html">Try Binary to Hex Converter</a></p>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Hexadecimal?</div>
+    <p>The <strong>hexadecimal system</strong> (base-16) uses digits <code>0–9</code> and letters <code>A–F</code>. It's a compact and human-readable way to represent binary values, widely used in memory addresses, color codes, and low-level programming.</p>
+
+    <div class="section-title">What is Binary?</div>
+    <p>The <strong>binary system</strong> (base-2) uses only two digits: <code>0</code> and <code>1</code>. It is the native language of digital electronics, representing everything from characters and numbers to instructions and memory.</p>
+
+    <div class="section-title">How to Convert Hex to Binary</div>
+    <ul>
+      <li><strong>Step 1:</strong> Take each hex digit individually.</li>
+      <li><strong>Step 2:</strong> Convert each hex digit to a 4-bit binary equivalent.</li>
+      <li><strong>Example:</strong> <code>2A</code> → <code>2 = 0010</code> and <code>A = 1010</code> → Result: <code>00101010</code></li>
+    </ul>
+
+    <div class="section-title">Hex to Binary Table</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Hex</th>
+          <th>Binary (4-bit)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>0000</td></tr>
+        <tr><td>1</td><td>0001</td></tr>
+        <tr><td>2</td><td>0010</td></tr>
+        <tr><td>3</td><td>0011</td></tr>
+        <tr><td>4</td><td>0100</td></tr>
+        <tr><td>5</td><td>0101</td></tr>
+        <tr><td>6</td><td>0110</td></tr>
+        <tr><td>7</td><td>0111</td></tr>
+        <tr><td>8</td><td>1000</td></tr>
+        <tr><td>9</td><td>1001</td></tr>
+        <tr><td>A</td><td>1010</td></tr>
+        <tr><td>B</td><td>1011</td></tr>
+        <tr><td>C</td><td>1100</td></tr>
+        <tr><td>D</td><td>1101</td></tr>
+        <tr><td>E</td><td>1110</td></tr>
+        <tr><td>F</td><td>1111</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function convertHexToBinary() {
+      const hexInput = document.getElementById("hexInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const binaryOutput = document.getElementById("binaryOutput");
+
+      const cleanHex = hexInput.replace(/\s+/g, '').toUpperCase();
+
+      if (!/^[0-9A-F]+$/.test(cleanHex)) {
+        outputText.textContent = "Invalid hexadecimal number.";
+        binaryOutput.value = "";
+        return;
+      }
+
+      let binaryResult = '';
+      for (let i = 0; i < cleanHex.length; i++) {
+        const bin = parseInt(cleanHex[i], 16).toString(2).padStart(4, '0');
+        binaryResult += bin;
+      }
+
+      outputText.textContent = binaryResult;
+      binaryOutput.value = binaryResult;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      // Check if the text is valid for copying
+      if (text === "" || text === "Invalid hexadecimal number." || text === "0") {
+        return;
+      }
+      
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers or non-secure contexts
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+
+    // Allow Enter key to trigger conversion
+    document.getElementById("hexInput").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        convertHexToBinary();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary to Hex Converter – Instant Hexadecimal Output | BitConvert</title>
+<meta name="description" content="Use BitConvert's Binary to Hex converter to convert binary numbers to hexadecimal values easily and quickly." />
+  <link rel="stylesheet" href="style.css"> <!-- Link to common stylesheet -->
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+      <a href="main.html" class="logo">BitConvert</a>
+      <div class="nav-links">
+        <a href="main.html">Home</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>BitConvert - Binary to Hexadecimal Converter</h1>
+    <p class="description">Convert binary numbers like <code>11011011</code> into hexadecimal format instantly. Quick, reliable, and made for developers & students alike.</p>
+
+    <div class="converter-box">
+      <div class="input-group">
+        <textarea id="binaryInput" placeholder="Enter Binary Value..."></textarea>
+        <textarea id="hexOutput" placeholder="Hexadecimal Output" readonly></textarea>
+      </div>
+      <button class="btn" onclick="convertBinaryToHex()">Convert</button>
+      <p style="text-align: center;">Need reverse? <a href="hex_to_binary.html">Try Hex to Binary Converter</a></p>
+      <div id="output" class="output-area">
+        <div class="output-text" id="outputText">0</div>
+        <button class="copy-icon" onclick="copyToClipboard()" title="Copy to clipboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <div class="copied-feedback" id="copiedFeedback">Copied!</div>
+      </div>
+    </div>
+
+    <div class="section-title">What is Binary?</div>
+    <p>The <strong>binary system</strong> is a base-2 numeral system using only two digits: 0 and 1. It's the language of computers and the foundation for all digital data representation.</p>
+
+    <div class="section-title">What is Hexadecimal?</div>
+    <p><strong>Hexadecimal</strong> (base-16) uses 16 digits: 0-9 and A-F. It's commonly used in computing for memory addresses, color codes, and shorthand binary representation (4 bits = 1 hex digit).</p>
+
+    <div class="section-title">How to Convert Binary to Hex</div>
+    <ul>
+      <li><strong>Step 1:</strong> Group binary digits in sets of 4 (from right).</li>
+      <li><strong>Step 2:</strong> Convert each group to its decimal value.</li>
+      <li><strong>Step 3:</strong> Replace with hex equivalent (e.g., 10 = A).</li>
+      <li><strong>Example:</strong> <code>10101010</code> → <code>AA</code></li>
+    </ul>
+  </div>
+
+  <script>
+    function convertBinaryToHex() {
+      const binary = document.getElementById("binaryInput").value.trim();
+      const outputText = document.getElementById("outputText");
+      const hexOutput = document.getElementById("hexOutput");
+
+      if (!/^[01]+$/.test(binary)) {
+        outputText.textContent = 'Invalid binary number.';
+        hexOutput.value = "";
+        return;
+      }
+
+      const hex = parseInt(binary, 2).toString(16).toUpperCase();
+      outputText.textContent = hex;
+      hexOutput.value = hex;
+    }
+
+    function copyToClipboard() {
+      const outputText = document.getElementById("outputText");
+      const text = outputText.textContent.trim();
+      const feedback = document.getElementById("copiedFeedback");
+      
+      if (text === "" || text === "Invalid binary number." || text === "0") {
+        return;
+      }
+
+      // Modern clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopiedFeedback();
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+          fallbackCopyTextToClipboard(text);
+        });
+      } else {
+        // Fallback for older browsers
+        fallbackCopyTextToClipboard(text);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showCopiedFeedback();
+        } else {
+          console.error('Fallback: Unable to copy');
+        }
+      } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopiedFeedback() {
+      const feedback = document.getElementById("copiedFeedback");
+      feedback.classList.add("show");
+      setTimeout(() => {
+        feedback.classList.remove("show");
+      }, 1500);
+    }
+  </script>
+</body>
+</html>
